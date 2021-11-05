@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.security.Principal
 
 @RestController
 class FileContentController(@Autowired private val fileRepository: FileRepository,
@@ -37,5 +38,11 @@ class FileContentController(@Autowired private val fileRepository: FileRepositor
             return ResponseEntity(inputStreamResource, headers, HttpStatus.OK)
         }
         return ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
+
+    @GetMapping(value = ["/hello"])
+    fun hello(principal: Principal): ResponseEntity<String> {
+        val response = String.format("Hello, %s", principal.name)
+        return ResponseEntity(response, HttpStatus.OK)
     }
 }
