@@ -1,5 +1,6 @@
 package com.vidbox.controller
 
+import com.vidbox.model.File
 import com.vidbox.repository.FileContentStore
 import com.vidbox.repository.FileRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,6 +27,23 @@ class FileContentController(@Autowired private val fileRepository: FileRepositor
             return ResponseEntity(HttpStatus.OK)
         }
         return ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
+
+    @RequestMapping(value = ["/upload"], method = [RequestMethod.PUT])
+    fun upload(@RequestParam("file") file: MultipartFile,
+               @RequestParam summary: String?,
+               principal: Principal): ResponseEntity<Any> {
+        val fileData = fileRepository.save(
+            File(id = null,
+                name = file.name,
+                summary = summary,
+                owner = principal.name,
+                contentId = null,
+                contentLength = null))
+        fileData.mimeType = file.contentType ?: "unknown"
+        fileContentStore.setContent(fileData, file.inputStream)
+        fileRepository.save(fileData)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])

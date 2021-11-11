@@ -37,7 +37,8 @@ class GlobalSecurityConfigurations: KeycloakWebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
         super.configure(http)
-        http!!.authorizeRequests()
+        http!!.csrf().disable()
+            .authorizeRequests()
             .antMatchers("/*")
             .hasAnyRole("user", "admin")
             .anyRequest()
