@@ -18,12 +18,11 @@ class FileContentController(@Autowired private val fileRepository: FileRepositor
 
     @RequestMapping(value = ["/upload"], method = [RequestMethod.PUT])
     fun upload(@RequestParam("file") file: MultipartFile,
-               @RequestParam summary: String?,
                principal: Principal): ResponseEntity<Any> {
         val fileData = fileRepository.save(
             File(id = null,
                 name = file.name,
-                summary = summary,
+                summary = null,
                 owner = principal.name,
                 contentId = null,
                 contentLength = null))
