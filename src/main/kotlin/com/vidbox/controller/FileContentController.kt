@@ -16,19 +16,6 @@ import java.security.Principal
 class FileContentController(@Autowired private val fileRepository: FileRepository,
                             @Autowired private val fileContentStore: FileContentStore) {
 
-    @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.PUT])
-    fun setContent(@PathVariable("fileId") id: Long,
-                   @RequestParam("file") file: MultipartFile): ResponseEntity<Any> {
-        val f = fileRepository.findById(id)
-        if (f.isPresent) {
-            f.get().mimeType = file.contentType ?: "unknown"
-            fileContentStore.setContent(f.get(), file.inputStream)
-            fileRepository.save(f.get())
-            return ResponseEntity(HttpStatus.OK)
-        }
-        return ResponseEntity(HttpStatus.BAD_REQUEST)
-    }
-
     @RequestMapping(value = ["/upload"], method = [RequestMethod.PUT])
     fun upload(@RequestParam("file") file: MultipartFile,
                @RequestParam summary: String?,
