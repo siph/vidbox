@@ -3,6 +3,7 @@ package com.vidbox.controller
 import com.vidbox.service.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -26,6 +27,17 @@ class FileContentController(@Autowired private val fileService: FileService) {
         val headers = HttpHeaders()
         headers.set("Content-Type", file.mimeType)
         return ResponseEntity(inputStreamResource, headers, HttpStatus.OK)
+    }
+
+    @RequestMapping(value = ["/files"], method = [RequestMethod.GET])
+    fun getFiles(@RequestParam(value = "page", required = false, defaultValue = "1")
+                 page: Int,
+                 @RequestParam(value = "size", required = false, defaultValue = "20")
+                 pageSize: Int,
+                 principal: Principal): ResponseEntity<Any> {
+        return ResponseEntity(
+            fileService.getFilesByOwner(principal.name, PageRequest.of(page - 1, pageSize)),
+            HttpStatus.OK)
     }
 
     @GetMapping(value = ["/hello"])

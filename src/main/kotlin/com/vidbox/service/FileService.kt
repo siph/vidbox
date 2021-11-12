@@ -5,6 +5,7 @@ import com.vidbox.repository.FileContentStore
 import com.vidbox.repository.FileRepository
 import javassist.NotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
@@ -28,12 +29,17 @@ class FileService(@Autowired private val fileRepository: FileRepository,
         return fileRepository.save(fileData)
     }
 
-   fun getFileById(id: Long): File {
-       return fileRepository.findById(id)
-           .orElseThrow { NotFoundException("cannot find file with id: $id") }
-   }
+    fun getFileById(id: Long): File {
+        return fileRepository.findById(id)
+            .orElseThrow { NotFoundException("cannot find file with id: $id") }
+    }
 
-   fun getContentByFile(file: File): InputStream {
-       return fileContentStore.getContent(file)
-   }
+    fun getContentByFile(file: File): InputStream {
+        return fileContentStore.getContent(file)
+    }
+
+    fun getFilesByOwner(owner: String, pageable: Pageable): List<File> {
+        return fileRepository.findAllByOwner(owner, pageable).content
+    }
+
 }
