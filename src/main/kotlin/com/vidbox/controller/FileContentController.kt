@@ -1,8 +1,6 @@
 package com.vidbox.controller
 
-import com.vidbox.model.File
-import com.vidbox.repository.FileContentStore
-import com.vidbox.repository.FileRepository
+import com.vidbox.service.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
@@ -13,35 +11,21 @@ import org.springframework.web.multipart.MultipartFile
 import java.security.Principal
 
 @RestController
-class FileContentController(@Autowired private val fileRepository: FileRepository,
-                            @Autowired private val fileContentStore: FileContentStore) {
+class FileContentController(@Autowired private val fileService: FileService) {
 
     @RequestMapping(value = ["/upload"], method = [RequestMethod.PUT])
-    fun upload(@RequestParam("file") file: MultipartFile,
+    fun upload(@RequestParam(name = "file", required = true) file: MultipartFile,
                principal: Principal): ResponseEntity<Any> {
-        val fileData = fileRepository.save(
-            File(id = null,
-                name = file.name,
-                summary = null,
-                owner = principal.name,
-                contentId = null,
-                contentLength = null))
-        fileData.mimeType = file.contentType ?: "unknown"
-        fileContentStore.setContent(fileData, file.inputStream)
-        fileRepository.save(fileData)
-        return ResponseEntity(HttpStatus.OK)
+        return ResponseEntity(fileService.uploadFile(file, principal), HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
     fun getContent(@PathVariable("fileId") id: Long): ResponseEntity<Any> {
-        val f = fileRepository.findById(id)
-        if (f.isPresent) {
-            val inputStreamResource = InputStreamResource(fileContentStore.getContent(f.get()))
-            val headers = HttpHeaders()
-            headers.set("Content-Type", f.get().mimeType)
-            return ResponseEntity(inputStreamResource, headers, HttpStatus.OK)
-        }
-        return ResponseEntity(HttpStatus.BAD_REQUEST)
+        val file = fileService.getFileById(id)
+        val inputStreamResource = InputStreamResource(fileService.getContentByFile(file))
+        val headers = HttpHeaders()
+        headers.set("Content-Type", file.mimeType)
+        return ResponseEntity(inputStreamResource, headers, HttpStatus.OK)
     }
 
     @GetMapping(value = ["/hello"])
