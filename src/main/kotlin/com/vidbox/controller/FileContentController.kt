@@ -1,5 +1,6 @@
 package com.vidbox.controller
 
+import com.vidbox.model.File
 import com.vidbox.service.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
@@ -21,8 +22,11 @@ class FileContentController(@Autowired private val fileService: FileService) {
     }
 
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
-    fun getContent(@PathVariable("fileId") id: Long): ResponseEntity<Any> {
+    fun getContent(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
         val file = fileService.getFileById(id)
+        if (!validateOwnership(principal, file)) {
+            return ResponseEntity(HttpStatus.FORBIDDEN)
+        }
         val inputStreamResource = InputStreamResource(fileService.getContentByFile(file))
         val headers = HttpHeaders()
         headers.set("Content-Type", file.mimeType)
@@ -44,5 +48,9 @@ class FileContentController(@Autowired private val fileService: FileService) {
     fun hello(principal: Principal): ResponseEntity<String> {
         val response = String.format("Hello, %s", principal.name)
         return ResponseEntity(response, HttpStatus.OK)
+    }
+
+    private fun validateOwnership(principal: Principal, file: File): Boolean {
+        return principal.name.equals(file.owner)
     }
 }
