@@ -44,6 +44,16 @@ class FileContentController(@Autowired private val fileService: FileService) {
             HttpStatus.OK)
     }
 
+    @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.DELETE])
+    fun deleteFile(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
+        val file = fileService.getFileById(id)
+        if (!validateOwnership(principal, file)) {
+            return ResponseEntity(HttpStatus.FORBIDDEN)
+        }
+        fileService.deleteFile(file)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
     @GetMapping(value = ["/hello"])
     fun hello(principal: Principal): ResponseEntity<String> {
         val response = String.format("Hello, %s", principal.name)

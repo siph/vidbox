@@ -42,4 +42,9 @@ class FileService(@Autowired private val fileRepository: FileRepository,
         return fileRepository.findAllByOwner(owner, pageable).content
     }
 
+    fun deleteFile(file: File) {
+        fileContentStore.unsetContent(file)
+        fileRepository.delete(file)
+    }
+
 }
