@@ -9,10 +9,10 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-class File(@Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
+class File(@Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long? = null,
            var name: String?,
            var created: Date = Date(),
            val owner: String,
-           @ContentId var contentId: String?,
-           @ContentLength var contentLength: Long?,
+           @ContentId var contentId: String? = null,
+           @ContentLength var contentLength: Long? = null,
            var mimeType: String = "text/plain")

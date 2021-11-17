@@ -17,13 +17,8 @@ class FileService(@Autowired private val fileRepository: FileRepository,
 
     fun uploadFile(file: MultipartFile, principal: Principal): File{
         val fileData = fileRepository.save(
-            File(id = null,
-                name = file.name,
-                summary = null,
-                owner = principal.name,
-                contentId = null,
-                contentLength = null)
-        )
+            File(name = file.name,
+                owner = principal.name))
         fileData.mimeType = file.contentType ?: "unknown"
         fileContentStore.setContent(fileData, file.inputStream)
         return fileRepository.save(fileData)
