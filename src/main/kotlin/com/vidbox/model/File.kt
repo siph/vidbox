@@ -12,10 +12,7 @@ import javax.persistence.Id
 class File(@Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
            var name: String?,
            var created: Date = Date(),
-           var summary: String?,
            val owner: String,
            @ContentId var contentId: String?,
            @ContentLength var contentLength: Long?,
-           var mimeType: String = "text/plain") {
-
-}
+           var mimeType: String = "text/plain")
