@@ -13,7 +13,6 @@ class File(@Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long? = n
            var name: String?,
            var created: Date = Date(),
            val owner: String,
-           var albumId: Long? = null,
            @ContentId var contentId: String? = null,
            @ContentLength var contentLength: Long? = null,
            var mimeType: String = "text/plain")
