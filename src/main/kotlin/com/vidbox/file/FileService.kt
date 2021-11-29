@@ -1,8 +1,5 @@
-package com.vidbox.service
+package com.vidbox.file
 
-import com.vidbox.model.File
-import com.vidbox.repository.FileContentStore
-import com.vidbox.repository.FileRepository
 import javassist.NotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -13,12 +10,14 @@ import java.security.Principal
 
 @Service
 class FileService(@Autowired private val fileRepository: FileRepository,
-                  @Autowired private val fileContentStore: FileContentStore) {
+                  @Autowired private val fileContentStore: FileContentStore
+) {
 
-    fun uploadFile(file: MultipartFile, principal: Principal): File{
+    fun uploadFile(file: MultipartFile, principal: Principal): File {
         val fileData = fileRepository.save(
             File(name = file.name,
-                owner = principal.name))
+                owner = principal.name)
+        )
         fileData.mimeType = file.contentType ?: "unknown"
         fileContentStore.setContent(fileData, file.inputStream)
         return fileRepository.save(fileData)

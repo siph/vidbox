@@ -1,4 +1,4 @@
-package com.vidbox.model
+package com.vidbox.file
 
 import org.springframework.content.commons.annotations.ContentId
 import org.springframework.content.commons.annotations.ContentLength

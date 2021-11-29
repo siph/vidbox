@@ -1,5 +1,6 @@
-package com.vidbox.model
+package com.vidbox.album
 
+import com.vidbox.file.File
 import javax.persistence.*
 
 @Entity

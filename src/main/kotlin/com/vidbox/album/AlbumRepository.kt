@@ -1,6 +1,5 @@
-package com.vidbox.repository
+package com.vidbox.album
 
-import com.vidbox.model.Album
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository

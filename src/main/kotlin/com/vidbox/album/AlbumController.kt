@@ -1,7 +1,5 @@
-package com.vidbox.controller
+package com.vidbox.album
 
-import com.vidbox.model.Album
-import com.vidbox.repository.AlbumRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus

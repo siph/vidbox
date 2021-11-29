@@ -1,6 +1,5 @@
-package com.vidbox.repository
+package com.vidbox.file
 
-import com.vidbox.model.File
 import org.springframework.content.commons.repository.ContentStore
 
 

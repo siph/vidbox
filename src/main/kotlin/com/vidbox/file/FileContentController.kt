@@ -1,7 +1,5 @@
-package com.vidbox.controller
+package com.vidbox.file
 
-import com.vidbox.model.File
-import com.vidbox.service.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
 import org.springframework.data.domain.PageRequest
