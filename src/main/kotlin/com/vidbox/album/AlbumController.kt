@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 
 @RestController
-class AlbumController(@Autowired private val albumRepository: AlbumRepository) {
+class AlbumController(@Autowired private val albumService: AlbumService) {
 
     @RequestMapping(value = ["/album"], method = [RequestMethod.POST])
     fun createAlbum(principal: Principal): ResponseEntity<Any> {
-        val album = Album(owner = principal.name)
-        return ResponseEntity(albumRepository.save(album), HttpStatus.OK)
+        return ResponseEntity(albumService.createAlbum(principal), HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/albums"], method = [RequestMethod.GET])
@@ -25,7 +24,7 @@ class AlbumController(@Autowired private val albumRepository: AlbumRepository) {
                   @RequestParam(value = "size", required = false, defaultValue = "20")
                   pageSize: Int,
                   principal: Principal): ResponseEntity<Any> {
-        val albums = albumRepository.findAllByOwner(principal.name, PageRequest.of(page, pageSize))
+        val albums = albumService.getAlbums(principal, PageRequest.of(page, pageSize))
         return ResponseEntity(albums, HttpStatus.OK)
     }
 }
