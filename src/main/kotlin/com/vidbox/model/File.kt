@@ -3,16 +3,25 @@ package com.vidbox.model
 import org.springframework.content.commons.annotations.ContentId
 import org.springframework.content.commons.annotations.ContentLength
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
+import kotlin.collections.ArrayList
 
 @Entity
-class File(@Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long? = null,
+@Table(name = "files")
+class File(@Id @GeneratedValue(strategy = GenerationType.AUTO)
+           @Column(name = "id")
+           var id: Long? = null,
+           @Column(name = "file_name")
            var name: String?,
+           @Column(name = "created")
            var created: Date = Date(),
+           @Column(name = "owner")
            val owner: String,
-           @ContentId var contentId: String? = null,
-           @ContentLength var contentLength: Long? = null,
+           @ContentId
+           @Column(name = "content_id")
+           var contentId: String? = null,
+           @ContentLength
+           @Column(name = "content_length")
+           var contentLength: Long? = null,
+           @Column(name = "mime_type")
            var mimeType: String = "text/plain")

@@ -3,6 +3,15 @@ package com.vidbox.model
 import javax.persistence.*
 
 @Entity
-class Album(@Id @GeneratedValue(strategy = GenerationType.AUTO) val id: Long? = null,
+@Table(name = "albums")
+class Album(@Id @GeneratedValue(strategy = GenerationType.AUTO)
+            @Column(name = "id")
+            val id: Long? = null,
+            @Column(name = "owner")
             val owner: String,
-            @ElementCollection val fileIds: List<Long> = ArrayList())
+            @ManyToMany(fetch = FetchType.EAGER)
+            @JoinTable(
+                name = "album_files",
+                joinColumns = [JoinColumn(name = "album_id")],
+                inverseJoinColumns = [JoinColumn(name = "file_id")])
+            val files: MutableList<File> = ArrayList())
