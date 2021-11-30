@@ -15,7 +15,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
 
     @RequestMapping(value = ["/album"], method = [RequestMethod.POST])
     fun createAlbum(principal: Principal): ResponseEntity<Any> {
-        return ResponseEntity(albumService.createAlbum(principal), HttpStatus.OK)
+        return ResponseEntity(albumService.createAlbum(principal), HttpStatus.CREATED)
     }
 
     @RequestMapping(value = ["/albums"], method = [RequestMethod.GET])
