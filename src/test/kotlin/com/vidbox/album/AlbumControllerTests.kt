@@ -46,7 +46,7 @@ class AlbumControllerTests: ServletUnitTestingSupport() {
             preferredUsername = "test_user"
         )
     )
-    fun test() {
+    fun `assert that albums are retrieved`() {
         mockMvc().get("/albums")
             .andExpect(status().isOk)
     }
