@@ -15,7 +15,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
 
     @RequestMapping(value = ["/album"], method = [RequestMethod.POST])
     fun createAlbum(principal: Principal): ResponseEntity<Any> {
-        return ResponseEntity(albumService.createAlbum(principal), HttpStatus.CREATED)
+        return ResponseEntity(albumService.createAlbum(principal.name), HttpStatus.CREATED)
     }
 
     @RequestMapping(value = ["/albums"], method = [RequestMethod.GET])
@@ -24,7 +24,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
                   @RequestParam(value = "size", required = false, defaultValue = "20")
                   pageSize: Int,
                   principal: Principal): ResponseEntity<Any> {
-        val albums = albumService.getAlbums(principal, PageRequest.of(page, pageSize))
+        val albums = albumService.getAlbums(principal.name, PageRequest.of(page, pageSize))
         return ResponseEntity(albums, HttpStatus.OK)
     }
 }
