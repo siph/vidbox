@@ -16,7 +16,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
     @RequestMapping(value = ["/upload"], method = [RequestMethod.PUT])
     fun upload(@RequestParam(name = "file", required = true) file: MultipartFile,
                principal: Principal): ResponseEntity<Any> {
-        return ResponseEntity(fileService.uploadFile(file, principal), HttpStatus.OK)
+        return ResponseEntity(fileService.uploadFile(file, principal.name), HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
