@@ -16,10 +16,14 @@ class TelegramController(@Autowired private val fileService: FileService,
                          @Autowired private val telegramService: TelegramService) {
 
     @RequestMapping(value = ["/telegram"], method = [RequestMethod.POST])
-    fun postFileToTelegram(@RequestParam fileId: Long, principal: Principal): ResponseEntity<Any> {
+    fun postFileToTelegram(@RequestParam fileId: Long,
+                           @RequestParam(required = false, defaultValue = "") text: String,
+                           @RequestParam chatId: String,
+                           principal: Principal): ResponseEntity<*> {
         val file = fileService.getFileById(fileId)
         if (!validateOwnership(principal, file)) {
-            return ResponseEntity(HttpStatus.FORBIDDEN)
+            return ResponseEntity(null, HttpStatus.FORBIDDEN)
         }
+        return telegramService.postToTelegram(file = file, text = text, chatId = chatId)
     }
 }
