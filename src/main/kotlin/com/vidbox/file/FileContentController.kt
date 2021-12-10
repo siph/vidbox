@@ -57,8 +57,8 @@ class FileContentController(@Autowired private val fileService: FileService) {
         val response = String.format("Hello, %s", principal.name)
         return ResponseEntity(response, HttpStatus.OK)
     }
+}
 
-    private fun validateOwnership(principal: Principal, file: File): Boolean {
-        return principal.name.equals(file.owner)
-    }
+fun validateOwnership(principal: Principal, file: File): Boolean {
+    return principal.name.equals(file.owner)
 }
