@@ -24,6 +24,7 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
     }
 
     fun postToTelegram(file: File, text: String, chatId: String): ResponseEntity<Response> {
+        log.debug("telegram request received for file with id: ${file.id}")
         val apiKey = keysService.getKeys(file.owner).telegramApiKey ?:
             throw BadRequestException("Telegram api key is not set")
         val tmpFile: java.io.File = getTempFile(file)
@@ -43,6 +44,7 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
             else -> throw BadRequestException("Request cannot be completed")
         }
         deleteTempFile(tmpFile)
+        log.debug("request completed with response: $response")
         return response
     }
 
@@ -51,6 +53,7 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
                   photo: FileSystemResource,
                   telegramApiKey: String,
                   chatId: String): ResponseEntity<Response> {
+        log.debug("photo found; sending to telegram")
         val url = "https://api.telegram.org/bot$telegramApiKey/sendPhoto"
         val headers = HttpHeaders()
         headers.contentType = MediaType.MULTIPART_FORM_DATA
@@ -77,11 +80,13 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
     private fun getTempFile(file: File): java.io.File {
         val tmpFile: java.io.File = java.io.File("/tmp/${file.contentId}${file.name}")
         FileUtils.copyInputStreamToFile(fileService.getContentByFile(file), tmpFile)
+        log.trace("Temporary file created at: ${tmpFile.name}")
         return tmpFile
     }
 
     private fun deleteTempFile(file: java.io.File) {
         file.delete()
+        log.trace("Temporary file: $file deleted")
     }
 }
 
