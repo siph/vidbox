@@ -29,13 +29,13 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
             throw BadRequestException("Telegram api key is not set")
         val tmpFile: java.io.File = getTempFile(file)
         val response: ResponseEntity<Response> = when {
-            file.mimeType.contains("image") -> {
+            file.mimeType.lowercase().contains("image") -> {
                 sendPhoto(text = text,
                     photo = FileSystemResource(tmpFile),
                     telegramApiKey = apiKey,
                     chatId = chatId)
             }
-            file.mimeType.contains("video") -> {
+            file.mimeType.lowercase().contains("video") -> {
                 sendVideo(text = text,
                     video = FileSystemResource(tmpFile),
                     telegramApiKey = apiKey,
