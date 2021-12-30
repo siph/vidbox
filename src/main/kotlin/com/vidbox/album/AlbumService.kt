@@ -19,6 +19,16 @@ class AlbumService(@Autowired private val albumRepository: AlbumRepository) {
         return albumRepository.findAllByOwner(owner, pageRequest)
     }
 
+    fun getAlbum(owner: String, albumId: Long): Album {
+        log.debug("get album request for album with id $albumId")
+        val album: Album = albumRepository.findById(albumId)
+            .orElseThrow { NotFoundException("Album with id: $albumId not found") }
+        if (!album.owner.equals(owner)) {
+            throw BadRequestException("Request not from owner")
+        }
+        return album
+    }
+
     fun createAlbum(owner: String): Album {
         log.debug("create album request for owner $owner")
         val album = Album(owner = owner)
@@ -26,11 +36,7 @@ class AlbumService(@Autowired private val albumRepository: AlbumRepository) {
     }
 
     fun deleteAlbum(owner: String, albumId: Long) {
-        val album: Album = albumRepository.findById(albumId)
-            .orElseThrow { NotFoundException("Album with id: $albumId not found") }
-        if (!album.owner.equals(owner)) {
-            throw BadRequestException("Request not from owner")
-        }
+        val album = getAlbum(owner, albumId)
         albumRepository.delete(album)
     }
 
