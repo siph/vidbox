@@ -10,7 +10,7 @@ import kotlin.collections.ArrayList
 @Table(name = "files")
 class File(@Id @GeneratedValue(strategy = GenerationType.AUTO)
            @Column(name = "id")
-           var id: Long? = null,
+           var id: Long = 0,
            @Column(name = "file_name")
            var name: String?,
            @Column(name = "created")

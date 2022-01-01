@@ -7,7 +7,7 @@ import javax.persistence.*
 @Table(name = "albums")
 class Album(@Id @GeneratedValue(strategy = GenerationType.AUTO)
             @Column(name = "id")
-            val id: Long? = null,
+            val id: Long = 0,
             @Column(name = "owner")
             val owner: String,
             @ManyToMany(fetch = FetchType.EAGER)
