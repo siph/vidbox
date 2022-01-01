@@ -24,7 +24,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
                   @RequestParam(value = "size", required = false, defaultValue = "20")
                   pageSize: Int,
                   principal: Principal): ResponseEntity<Any> {
-        val albums = albumService.getAlbums(principal.name, PageRequest.of(page, pageSize))
+        val albums = albumService.getAlbums(principal.name, PageRequest.of(page - 1, pageSize))
         return ResponseEntity(albums, HttpStatus.OK)
     }
 
