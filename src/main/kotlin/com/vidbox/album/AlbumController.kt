@@ -28,6 +28,16 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
         return ResponseEntity(albums, HttpStatus.OK)
     }
 
+    @RequestMapping(value = ["/album/add"], method = [RequestMethod.POST, RequestMethod.PUT])
+    fun addFileToAlbum(principal: Principal,
+                       @RequestParam(value = "fileId")
+                       fileId: Long,
+                       @RequestParam(value = "albumId")
+                       albumId: Long): ResponseEntity<Any> {
+        val album = albumService.addFileToAlbum(owner = principal.name, albumId = albumId, fileId = fileId)
+        return ResponseEntity(album, HttpStatus.OK)
+    }
+
     @RequestMapping(value = ["/album"], method = [RequestMethod.GET])
     fun getAlbum(principal: Principal,
                  @RequestParam(value = "id")
