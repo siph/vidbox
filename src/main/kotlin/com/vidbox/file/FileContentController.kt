@@ -1,5 +1,6 @@
 package com.vidbox.file
 
+import com.vidbox.util.validateOwnership
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
 import org.springframework.data.domain.PageRequest
@@ -22,7 +23,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
     fun getContent(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
         val file = fileService.getFileById(id)
-        if (!validateOwnership(principal, file)) {
+        if (!validateOwnership(principal.name, file)) {
             return ResponseEntity(HttpStatus.FORBIDDEN)
         }
         val inputStreamResource = InputStreamResource(fileService.getContentByFile(file))
@@ -45,7 +46,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.DELETE])
     fun deleteFile(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
         val file = fileService.getFileById(id)
-        if (!validateOwnership(principal, file)) {
+        if (!validateOwnership(principal.name, file)) {
             return ResponseEntity(HttpStatus.FORBIDDEN)
         }
         fileService.deleteFile(file)
@@ -57,8 +58,4 @@ class FileContentController(@Autowired private val fileService: FileService) {
         val response = String.format("Hello, %s", principal.name)
         return ResponseEntity(response, HttpStatus.OK)
     }
-}
-
-fun validateOwnership(principal: Principal, file: File): Boolean {
-    return principal.name.equals(file.owner)
 }

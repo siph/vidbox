@@ -1,7 +1,7 @@
 package com.vidbox.telegram
 
 import com.vidbox.file.FileService
-import com.vidbox.file.validateOwnership
+import com.vidbox.util.validateOwnership
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,7 +21,7 @@ class TelegramController(@Autowired private val fileService: FileService,
                            @RequestParam chatId: String,
                            principal: Principal): ResponseEntity<*> {
         val file = fileService.getFileById(fileId)
-        if (!validateOwnership(principal, file)) {
+        if (!validateOwnership(principal.name, file)) {
             return ResponseEntity(null, HttpStatus.FORBIDDEN)
         }
         return telegramService.postToTelegram(file = file, text = text, chatId = chatId)
