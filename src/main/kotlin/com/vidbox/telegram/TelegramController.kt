@@ -21,9 +21,7 @@ class TelegramController(@Autowired private val fileService: FileService,
                            @RequestParam chatId: String,
                            principal: Principal): ResponseEntity<*> {
         val file = fileService.getFileById(fileId)
-        if (!validateOwnership(principal.name, file)) {
-            return ResponseEntity(null, HttpStatus.FORBIDDEN)
-        }
+        validateOwnership(principal.name, file)
         return telegramService.postToTelegram(file = file, text = text, chatId = chatId)
     }
 }

@@ -23,9 +23,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
     fun getContent(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
         val file = fileService.getFileById(id)
-        if (!validateOwnership(principal.name, file)) {
-            return ResponseEntity(HttpStatus.FORBIDDEN)
-        }
+        validateOwnership(principal.name, file)
         val inputStreamResource = InputStreamResource(fileService.getContentByFile(file))
         val headers = HttpHeaders()
         headers.set("Content-Type", file.mimeType)
@@ -46,9 +44,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.DELETE])
     fun deleteFile(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
         val file = fileService.getFileById(id)
-        if (!validateOwnership(principal.name, file)) {
-            return ResponseEntity(HttpStatus.FORBIDDEN)
-        }
+        validateOwnership(principal.name, file)
         fileService.deleteFile(file)
         return ResponseEntity(HttpStatus.OK)
     }

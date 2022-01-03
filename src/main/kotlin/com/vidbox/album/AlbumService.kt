@@ -2,7 +2,6 @@ package com.vidbox.album
 
 import com.vidbox.file.FileService
 import com.vidbox.util.validateOwnership
-import internal.org.springframework.content.rest.controllers.BadRequestException
 import javassist.NotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,9 +25,7 @@ class AlbumService(@Autowired private val albumRepository: AlbumRepository,
         log.debug("get album request for album with id $albumId")
         val album: Album = albumRepository.findById(albumId)
             .orElseThrow { NotFoundException("Album with id: $albumId not found") }
-        if (!validateOwnership(owner, album)) {
-            throw BadRequestException("Request not from owner")
-        }
+        validateOwnership(owner, album)
         return album
     }
 
@@ -44,9 +41,7 @@ class AlbumService(@Autowired private val albumRepository: AlbumRepository,
 
     fun saveAlbum(owner: String, album: Album): Album {
         log.debug("saveAlbum request for owner $owner")
-        if (!validateOwnership(owner, album)) {
-            throw BadRequestException("Request not from owner")
-        }
+        validateOwnership(owner, album)
         return albumRepository.save(album)
     }
 

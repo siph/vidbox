@@ -27,6 +27,7 @@ class FileService(@Autowired private val fileRepository: FileRepository,
         return fileRepository.save(fileData)
     }
 
+    // TODO add owner, move validation here
     fun getFileById(id: Long): File {
         log.debug("get file request with id: $id")
         return fileRepository.findById(id)
