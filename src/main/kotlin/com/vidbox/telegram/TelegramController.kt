@@ -1,9 +1,7 @@
 package com.vidbox.telegram
 
 import com.vidbox.file.FileService
-import com.vidbox.util.validateOwnership
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -20,8 +18,7 @@ class TelegramController(@Autowired private val fileService: FileService,
                            @RequestParam(required = false, defaultValue = "") text: String,
                            @RequestParam chatId: String,
                            principal: Principal): ResponseEntity<*> {
-        val file = fileService.getFileById(fileId)
-        validateOwnership(principal.name, file)
+        val file = fileService.getFileById(principal.name, fileId)
         return telegramService.postToTelegram(file = file, text = text, chatId = chatId)
     }
 }

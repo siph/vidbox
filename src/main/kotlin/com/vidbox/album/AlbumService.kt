@@ -47,7 +47,7 @@ class AlbumService(@Autowired private val albumRepository: AlbumRepository,
 
     fun addFileToAlbum(owner: String, albumId: Long, fileId: Long): Album {
         val album = getAlbum(owner, albumId)
-        val file = fileService.getFileById(fileId)
+        val file = fileService.getFileById(owner, fileId)
         album.files.add(file)
         return saveAlbum(owner, album)
     }

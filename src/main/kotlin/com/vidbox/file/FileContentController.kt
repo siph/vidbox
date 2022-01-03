@@ -1,6 +1,5 @@
 package com.vidbox.file
 
-import com.vidbox.util.validateOwnership
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
 import org.springframework.data.domain.PageRequest
@@ -22,8 +21,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
 
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
     fun getContent(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
-        val file = fileService.getFileById(id)
-        validateOwnership(principal.name, file)
+        val file = fileService.getFileById(principal.name, id)
         val inputStreamResource = InputStreamResource(fileService.getContentByFile(file))
         val headers = HttpHeaders()
         headers.set("Content-Type", file.mimeType)
@@ -43,9 +41,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
 
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.DELETE])
     fun deleteFile(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
-        val file = fileService.getFileById(id)
-        validateOwnership(principal.name, file)
-        fileService.deleteFile(file)
+        fileService.deleteFileById(principal.name, id)
         return ResponseEntity(HttpStatus.OK)
     }
 

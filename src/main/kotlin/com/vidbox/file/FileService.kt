@@ -1,5 +1,6 @@
 package com.vidbox.file
 
+import com.vidbox.util.validateOwnership
 import javassist.NotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,11 +28,12 @@ class FileService(@Autowired private val fileRepository: FileRepository,
         return fileRepository.save(fileData)
     }
 
-    // TODO add owner, move validation here
-    fun getFileById(id: Long): File {
+    fun getFileById(owner: String, id: Long): File {
         log.debug("get file request with id: $id")
-        return fileRepository.findById(id)
+        val file =  fileRepository.findById(id)
             .orElseThrow { NotFoundException("cannot find file with id: $id") }
+        validateOwnership(owner, file)
+        return file
     }
 
     fun getContentByFile(file: File): InputStream {
@@ -45,8 +47,10 @@ class FileService(@Autowired private val fileRepository: FileRepository,
         return fileRepository.findAllByOwner(owner, pageable).content
     }
 
-    fun deleteFile(file: File) {
-        log.debug("delete file request for file with id: ${file.id}")
+    fun deleteFileById(owner: String, id: Long) {
+        log.debug("delete file request for file with id: $id")
+        // validated in getFileById() function call
+        val file = getFileById(owner, id)
         fileContentStore.unsetContent(file)
         fileRepository.delete(file)
     }
