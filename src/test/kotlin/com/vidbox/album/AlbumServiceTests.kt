@@ -1,19 +1,24 @@
 package com.vidbox.album
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 
 @SpringBootTest
-class AlbumServiceTests(@Autowired private val albumService: AlbumService) {
+class AlbumServiceTests(@Autowired private val albumService: AlbumService,
+                        @Autowired private val albumRepository: AlbumRepository) {
 
     val owner = "test"
 
+    @AfterEach
+    fun `clear repository`() {
+        albumRepository.deleteAll()
+    }
+
     @Test
-    @Order(1)
     fun `assert that album is created and retrieved`() {
         val album = albumService.createAlbum(owner)
         assertThat(albumService.getAlbum(album.owner, album.id))
@@ -21,7 +26,6 @@ class AlbumServiceTests(@Autowired private val albumService: AlbumService) {
     }
 
     @Test
-    @Order(2)
     fun `assert that list is retrieved and album is deleted`() {
         albumService.createAlbum(owner)
         val albums = albumService.getAlbums(owner, PageRequest.of(0, 10))
