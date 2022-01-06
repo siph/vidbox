@@ -4,6 +4,7 @@ import com.vidbox.util.validateOwnership
 import javassist.NotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -41,10 +42,10 @@ class FileService(@Autowired private val fileRepository: FileRepository,
         return fileContentStore.getContent(file)
     }
 
-    fun getFilesByOwner(owner: String, pageable: Pageable): List<File> {
+    fun getFilesByOwner(owner: String, pageable: Pageable): Page<File> {
         log.debug("get file list request for owner: $owner")
         log.debug("with pageable: $pageable")
-        return fileRepository.findAllByOwner(owner, pageable).content
+        return fileRepository.findAllByOwner(owner, pageable)
     }
 
     fun deleteFileById(owner: String, id: Long) {
