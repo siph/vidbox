@@ -1,6 +1,8 @@
 package com.vidbox.album
 
+import internal.org.springframework.content.rest.controllers.BadRequestException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,5 +35,12 @@ class AlbumServiceTests(@Autowired private val albumService: AlbumService,
         val album = albums.get().findFirst().orElseThrow { Exception() }
         albumService.deleteAlbum(album.owner, album.id)
         assertThat(albumService.getAlbums(owner, PageRequest.of(1, 10)).totalElements).isEqualTo(0)
+    }
+
+    @Test
+    fun `assert that retrieving non owned album fails`() {
+        val album = albumService.createAlbum(owner)
+        assertThatThrownBy { albumService.getAlbum("not owner", album.id) }
+            .isInstanceOf(BadRequestException::class.java)
     }
 }
