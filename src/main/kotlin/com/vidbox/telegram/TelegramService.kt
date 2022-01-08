@@ -1,11 +1,13 @@
 package com.vidbox.telegram
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.vidbox.album.Album
 import com.vidbox.album.AlbumService
 import com.vidbox.file.File
 import com.vidbox.file.FileService
 import com.vidbox.keys.KeysService
+import com.vidbox.telegram.model.Photo
+import com.vidbox.telegram.model.Response
+import com.vidbox.telegram.model.Result
 import internal.org.springframework.content.rest.controllers.BadRequestException
 import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
@@ -104,16 +106,3 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
         log.trace("Temporary file: $file deleted")
     }
 }
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Response(val ok: Boolean,
-                    val result: Result)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Result(val photo: Photo)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Photo(val file_id: String,
-                 val file_size: String,
-                 val width: Int,
-                 val height: Int)
