@@ -19,6 +19,6 @@ class TelegramController(@Autowired private val fileService: FileService,
                            @RequestParam chatId: String,
                            principal: Principal): ResponseEntity<*> {
         val file = fileService.getFileById(principal.name, fileId)
-        return telegramService.postToTelegram(file = file, text = text, chatId = chatId)
+        return telegramService.postFileToTelegram(file = file, text = text, chatId = chatId)
     }
 }

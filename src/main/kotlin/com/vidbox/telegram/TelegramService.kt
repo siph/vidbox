@@ -1,6 +1,8 @@
 package com.vidbox.telegram
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.vidbox.album.Album
+import com.vidbox.album.AlbumService
 import com.vidbox.file.File
 import com.vidbox.file.FileService
 import com.vidbox.keys.KeysService
@@ -15,37 +17,49 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 
+//TODO: entire class needs major testing
 @Service
 class TelegramService(@Autowired private val restTemplate: RestTemplate,
                       @Autowired private val fileService: FileService,
+                      @Autowired private val albumService: AlbumService,
                       @Autowired private val keysService: KeysService) {
     companion object {
         val log = LoggerFactory.getLogger(TelegramService::class.java)
     }
 
-    fun postToTelegram(file: File, text: String, chatId: String): ResponseEntity<Response> {
+    fun postFileToTelegram(file: File, text: String, chatId: String): ResponseEntity<Response> {
         log.debug("telegram request received for file with id: ${file.id}")
         val apiKey = keysService.getKeys(file.owner).telegramApiKey ?:
             throw BadRequestException("Telegram api key is not set")
         val tmpFile: java.io.File = getTempFile(file)
-        val response: ResponseEntity<Response> = when {
+        val response: ResponseEntity<Response> = getTelegramResult(file, text, apiKey, chatId)
+        deleteTempFile(tmpFile)
+        log.debug("request completed with response: $response")
+        return response
+    }
+
+    // TODO: implement posting album to telegram
+    fun postAlbumToTelegram(album: Album, text: String, chatId: String): ResponseEntity<Any> {
+        return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    private fun getTelegramResult(file: File, text: String, telegramApiKey: String, chatId: String): ResponseEntity<Response> {
+        val tmpFile: java.io.File = getTempFile(file)
+        return when {
             file.mimeType.lowercase().contains("image") -> {
                 sendPhoto(text = text,
                     photo = FileSystemResource(tmpFile),
-                    telegramApiKey = apiKey,
+                    telegramApiKey = telegramApiKey,
                     chatId = chatId)
             }
             file.mimeType.lowercase().contains("video") -> {
                 sendVideo(text = text,
                     video = FileSystemResource(tmpFile),
-                    telegramApiKey = apiKey,
+                    telegramApiKey = telegramApiKey,
                     chatId = chatId)
             }
             else -> throw BadRequestException("Request cannot be completed")
         }
-        deleteTempFile(tmpFile)
-        log.debug("request completed with response: $response")
-        return response
     }
 
     private fun sendPhoto(text: String,
@@ -74,7 +88,8 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
                           video: FileSystemResource,
                           telegramApiKey: String,
                           chatId: String): ResponseEntity<Response> {
-    return ResponseEntity(Response(false), HttpStatus.BAD_REQUEST)
+        val response = Response(false, Result(Photo("", "", -1, -1)))
+    return ResponseEntity(response, HttpStatus.BAD_REQUEST)
     }
 
     private fun getTempFile(file: File): java.io.File {
@@ -91,4 +106,14 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class Response(val ok: Boolean)
+data class Response(val ok: Boolean,
+                    val result: Result)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Result(val photo: Photo)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Photo(val file_id: String,
+                 val file_size: String,
+                 val width: Int,
+                 val height: Int)
