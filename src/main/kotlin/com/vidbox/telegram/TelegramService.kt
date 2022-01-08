@@ -1,7 +1,6 @@
 package com.vidbox.telegram
 
 import com.vidbox.album.Album
-import com.vidbox.album.AlbumService
 import com.vidbox.file.File
 import com.vidbox.file.FileService
 import com.vidbox.keys.KeysService
@@ -18,12 +17,12 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
+import java.util.stream.Collectors
 
 //TODO: entire class needs major testing
 @Service
 class TelegramService(@Autowired private val restTemplate: RestTemplate,
                       @Autowired private val fileService: FileService,
-                      @Autowired private val albumService: AlbumService,
                       @Autowired private val keysService: KeysService) {
     companion object {
         val log = LoggerFactory.getLogger(TelegramService::class.java)
@@ -31,18 +30,19 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
 
     fun postFileToTelegram(file: File, text: String, chatId: String): ResponseEntity<Response> {
         log.debug("telegram request received for file with id: ${file.id}")
-        val apiKey = keysService.getKeys(file.owner).telegramApiKey ?:
-            throw BadRequestException("Telegram api key is not set")
-        val tmpFile: java.io.File = getTempFile(file)
+        val apiKey = getTelegramApiKey(file)
         val response: ResponseEntity<Response> = getTelegramResult(file, text, apiKey, chatId)
-        deleteTempFile(tmpFile)
         log.debug("request completed with response: $response")
         return response
     }
 
-    // TODO: implement posting album to telegram
-    fun postAlbumToTelegram(album: Album, text: String, chatId: String): ResponseEntity<Any> {
-        return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+    // TODO: proper implementation as documented here: https://core.telegram.org/bots/api#sendmediagroup
+    fun postAlbumToTelegram(album: Album, text: String, chatId: String): List<ResponseEntity<Response>> {
+        log.debug("telegram request received for album with id: ${album.id}")
+        val apiKey = getTelegramApiKey(album)
+        return album.files.stream()
+            .map { getTelegramResult(it, text, apiKey, chatId) }
+            .collect(Collectors.toList())
     }
 
     private fun getTelegramResult(file: File, text: String, telegramApiKey: String, chatId: String): ResponseEntity<Response> {
@@ -104,5 +104,15 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
     private fun deleteTempFile(file: java.io.File) {
         file.delete()
         log.trace("Temporary file: $file deleted")
+    }
+
+    private fun getTelegramApiKey(file: File): String {
+        return keysService.getKeys(file.owner).telegramApiKey ?:
+        throw BadRequestException("Telegram api key is not set")
+    }
+
+    private fun getTelegramApiKey(album: Album): String {
+        return keysService.getKeys(album.owner).telegramApiKey ?:
+        throw BadRequestException("Telegram api key is not set")
     }
 }
