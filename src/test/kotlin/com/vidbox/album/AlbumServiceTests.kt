@@ -1,5 +1,8 @@
 package com.vidbox.album
 
+import com.vidbox.file.File
+import com.vidbox.file.FileService
+import com.vidbox.util.getMockFile
 import internal.org.springframework.content.rest.controllers.BadRequestException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -11,7 +14,8 @@ import org.springframework.data.domain.PageRequest
 
 @SpringBootTest
 class AlbumServiceTests(@Autowired private val albumService: AlbumService,
-                        @Autowired private val albumRepository: AlbumRepository) {
+                        @Autowired private val albumRepository: AlbumRepository,
+                        @Autowired private val fileService: FileService) {
 
     val owner = "test"
 
@@ -42,5 +46,15 @@ class AlbumServiceTests(@Autowired private val albumService: AlbumService,
         val album = albumService.createAlbum(owner)
         assertThatThrownBy { albumService.getAlbum("not owner", album.id) }
             .isInstanceOf(BadRequestException::class.java)
+    }
+
+    @Test
+    fun `assert that file is added to and removed from album`() {
+        val file = fileService.uploadFile(getMockFile(), owner)
+        var album = albumService.createAlbum(owner)
+        albumService.addFileToAlbum(owner = owner, fileId = file.id, albumId = album.id)
+        assertThat(albumService.getAlbum(owner, album.id).files.size).isEqualTo(1)
+        album = albumService.deleteFileFromAlbum(owner = owner, albumId = album.id, fileId = file.id)
+        assertThat(albumService.getAlbum(owner, album.id).files.size).isEqualTo(0)
     }
 }

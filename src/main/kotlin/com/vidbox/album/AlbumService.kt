@@ -51,4 +51,10 @@ class AlbumService(@Autowired private val albumRepository: AlbumRepository,
         album.files.add(file)
         return saveAlbum(owner, album)
     }
+
+    fun deleteFileFromAlbum(owner: String, albumId: Long, fileId: Long): Album {
+        val album = getAlbum(owner, albumId)
+        album.files.removeIf { it.id == fileId }
+        return saveAlbum(owner, album)
+    }
 }

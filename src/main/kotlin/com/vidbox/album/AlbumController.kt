@@ -38,6 +38,16 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
         return ResponseEntity(album, HttpStatus.OK)
     }
 
+    @RequestMapping(value = ["/album/remove"], method = [RequestMethod.POST, RequestMethod.DELETE])
+    fun deleteFileFromAlbum(principal: Principal,
+                       @RequestParam(value = "fileId")
+                       fileId: Long,
+                       @RequestParam(value = "albumId")
+                       albumId: Long): ResponseEntity<Any> {
+        val album = albumService.deleteFileFromAlbum(owner = principal.name, albumId = albumId, fileId = fileId)
+        return ResponseEntity(album, HttpStatus.OK)
+    }
+
     @RequestMapping(value = ["/album"], method = [RequestMethod.GET])
     fun getAlbum(principal: Principal,
                  @RequestParam(value = "id")

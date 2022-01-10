@@ -1,5 +1,6 @@
 package com.vidbox.file
 
+import com.vidbox.util.getMockFile
 import internal.org.springframework.content.rest.controllers.BadRequestException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -8,8 +9,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
-import org.springframework.http.MediaType
-import org.springframework.mock.web.MockMultipartFile
 
 @SpringBootTest
 class FileServiceTests(@Autowired private val fileService: FileService,
@@ -52,12 +51,5 @@ class FileServiceTests(@Autowired private val fileService: FileService,
         val file = fileService.uploadFile(multipartFile, owner)
         assertThatThrownBy { fileService.getFileById("non owner", file.id) }
             .isInstanceOf(BadRequestException::class.java)
-    }
-
-    private fun getMockFile(): MockMultipartFile {
-        return MockMultipartFile("file",
-            "test.txt",
-            MediaType.TEXT_PLAIN_VALUE,
-            "testing".encodeToByteArray())
     }
 }
