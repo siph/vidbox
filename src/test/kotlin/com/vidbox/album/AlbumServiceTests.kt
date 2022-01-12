@@ -1,6 +1,5 @@
 package com.vidbox.album
 
-import com.vidbox.file.File
 import com.vidbox.file.FileService
 import com.vidbox.util.getMockFile
 import internal.org.springframework.content.rest.controllers.BadRequestException
