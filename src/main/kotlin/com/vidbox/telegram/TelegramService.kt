@@ -47,7 +47,7 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
 
     private fun getTelegramResult(file: File, text: String, telegramApiKey: String, chatId: String): ResponseEntity<Response> {
         val tmpFile: java.io.File = getTempFile(file)
-        return when {
+        val response = when {
             file.mimeType.lowercase().contains("image") -> {
                 sendPhoto(text = text,
                     photo = FileSystemResource(tmpFile),
@@ -62,6 +62,8 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
             }
             else -> throw BadRequestException("Request cannot be completed")
         }
+        deleteTempFile(tmpFile)
+        return response
     }
 
     private fun sendPhoto(text: String,
