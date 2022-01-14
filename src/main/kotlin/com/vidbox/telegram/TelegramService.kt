@@ -7,8 +7,9 @@ import com.vidbox.keys.KeysService
 import com.vidbox.telegram.model.Photo
 import com.vidbox.telegram.model.Response
 import com.vidbox.telegram.model.Result
+import com.vidbox.util.deleteTempFile
+import com.vidbox.util.getTempFile
 import internal.org.springframework.content.rest.controllers.BadRequestException
-import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.FileSystemResource
@@ -46,7 +47,7 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
     }
 
     private fun getTelegramResult(file: File, text: String, telegramApiKey: String, chatId: String): ResponseEntity<Response> {
-        val tmpFile: java.io.File = getTempFile(file)
+        val tmpFile: java.io.File = getTempFile(file, fileService.getContentByFile(file))
         val response = when {
             file.mimeType.lowercase().contains("image") -> {
                 sendPhoto(text = text,
@@ -94,18 +95,6 @@ class TelegramService(@Autowired private val restTemplate: RestTemplate,
                           chatId: String): ResponseEntity<Response> {
         val response = Response(false, Result(Photo("", "", -1, -1)))
     return ResponseEntity(response, HttpStatus.BAD_REQUEST)
-    }
-
-    private fun getTempFile(file: File): java.io.File {
-        val tmpFile: java.io.File = java.io.File("/tmp/${file.contentId}${file.name}")
-        FileUtils.copyInputStreamToFile(fileService.getContentByFile(file), tmpFile)
-        log.trace("Temporary file created at: ${tmpFile.name}")
-        return tmpFile
-    }
-
-    private fun deleteTempFile(file: java.io.File) {
-        file.delete()
-        log.trace("Temporary file: $file deleted")
     }
 
     private fun getTelegramApiKey(file: File): String {
