@@ -7,8 +7,8 @@ import java.io.InputStream
 
 class FileSystemUtils
 
-fun getTempFile(file: File, inputStream: InputStream): java.io.File {
-    val tmpFile: java.io.File = java.io.File("/tmp/${file.contentId}${file.name}")
+fun getTempFile(file: File, inputStream: InputStream, rootPath: String = "/tmp/"): java.io.File {
+    val tmpFile: java.io.File = java.io.File("$rootPath${file.contentId}${file.name}")
     FileUtils.copyInputStreamToFile(inputStream, tmpFile)
     TelegramService.log.trace("Temporary file created at: ${tmpFile.name}")
     return tmpFile
