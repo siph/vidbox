@@ -20,6 +20,7 @@
         <keycloak.version>15.0.2</keycloak.version>
         <springaddons.version>3.1.1</springaddons.version>
         <apache.commons.io.version>2.11.0</apache.commons.io.version>
+        <apache.commons.fileupload.version>1.4</apache.commons.fileupload.version>
         <log4j2.version>2.15.0</log4j2.version>
     </properties>
 
@@ -28,6 +29,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${apache.commons.io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${apache.commons.fileupload.version}</version>
         </dependency>
         <dependency>
             <groupId>com.c4-soft.springaddons</groupId>
