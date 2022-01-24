@@ -22,7 +22,7 @@ import java.util.function.Consumer
 import java.util.stream.Collectors
 import javax.annotation.PostConstruct
 
-@Service
+//@Service
 class EditorService(@Autowired private val albumService: AlbumService,
                     @Autowired private val fileService: FileService) {
     companion object {
