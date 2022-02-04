@@ -5,7 +5,6 @@ import com.vidbox.util.getMockFile
 import internal.org.springframework.content.rest.controllers.BadRequestException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,13 +17,9 @@ class AlbumServiceTests(@Autowired private val albumService: AlbumService,
 
     val owner = "test"
 
-    @AfterEach
-    fun `clear repository`() {
-        albumRepository.deleteAll()
-    }
-
     @Test
     fun `assert that album is created and retrieved`() {
+        clearRepository();
         val album = albumService.createAlbum(owner)
         assertThat(albumService.getAlbum(album.owner, album.id))
             .usingRecursiveComparison().isEqualTo(album)
@@ -32,6 +27,7 @@ class AlbumServiceTests(@Autowired private val albumService: AlbumService,
 
     @Test
     fun `assert that list is retrieved and album is deleted`() {
+        clearRepository();
         albumService.createAlbum(owner)
         val albums = albumService.getAlbums(owner, PageRequest.of(0, 10))
         assertThat(albums.totalElements).isEqualTo(1)
@@ -42,6 +38,7 @@ class AlbumServiceTests(@Autowired private val albumService: AlbumService,
 
     @Test
     fun `assert that retrieving non owned album fails`() {
+        clearRepository();
         val album = albumService.createAlbum(owner)
         assertThatThrownBy { albumService.getAlbum("not owner", album.id) }
             .isInstanceOf(BadRequestException::class.java)
@@ -49,11 +46,16 @@ class AlbumServiceTests(@Autowired private val albumService: AlbumService,
 
     @Test
     fun `assert that file is added to and removed from album`() {
+        clearRepository();
         val file = fileService.uploadFile(getMockFile(), owner)
         var album = albumService.createAlbum(owner)
         albumService.addFileToAlbum(owner = owner, fileId = file.id, albumId = album.id)
         assertThat(albumService.getAlbum(owner, album.id).files.size).isEqualTo(1)
         album = albumService.deleteFileFromAlbum(owner = owner, albumId = album.id, fileId = file.id)
         assertThat(albumService.getAlbum(owner, album.id).files.size).isEqualTo(0)
+    }
+
+    private fun clearRepository() {
+        albumRepository.deleteAll()
     }
 }
