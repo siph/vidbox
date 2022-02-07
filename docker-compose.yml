@@ -3,6 +3,16 @@ services:
   vidbox:
     build: .
     ports:
-      - 8080:8080
+      - "8080:8080"
     volumes:
       - .:/tmp
+  keycloak:
+    image: jboss/keycloak
+    volumes:
+      - ./ci:/opt/jboss/keycloak/imports
+    command: ["-Djboss.socket.binding.port-offset=10"]
+    environment:
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm.json -Dkeycloak.profile.feature.upload_scripts=enabled
+    ports:
+      - "8090:8090"
+
