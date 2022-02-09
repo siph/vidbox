@@ -1,0 +1,16 @@
+image: eclipse-temurin:11
+
+stages:  
+  - test
+  - build
+
+unit-test-job:
+  stage: test
+  script:
+    - echo "Building..."
+    - ./mvnw test
+
+build-job:
+  stage: build
+  script:
+    - echo "Building..."
