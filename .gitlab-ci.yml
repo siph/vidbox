@@ -7,8 +7,7 @@ stages:
 unit-test-job:
   stage: test
   script:
-    - echo "Building..."
-    - ./mvnw test
+    - echo "Testing..."
 
 build-job:
   stage: build
