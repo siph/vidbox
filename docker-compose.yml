@@ -6,6 +6,12 @@ services:
       - "8080:8080"
     volumes:
       - /tmp:/tmp
+    environment:
+      KEYCLOAK_AUTH-SERVER-URL: http://keycloak:8090/auth
+      KEYCLOAK_REALM: vidbox
+      KEYCLOAK_RESOURCE: vidbox
+      KEYCLOAK_PUBLIC-CLIENT: "true"
+      KEYCLOAK_PRINCIPAL-ATTRIBUTE: preferred_username
   keycloak:
     image: jboss/keycloak
     volumes:
