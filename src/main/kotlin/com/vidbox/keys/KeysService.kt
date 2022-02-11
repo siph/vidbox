@@ -11,7 +11,7 @@ class KeysService(@Autowired private val keysRepository: KeysRepository) {
         val log = LoggerFactory.getLogger(KeysService::class.java)
     }
 
-    fun setTelegramApiKey(owner: String, telegramApiKey: String): Keys {
+    fun setTelegramApiKey(owner: String, telegramApiKey: String?): Keys {
         log.debug("set telegram api request for owner: $owner")
         val keys = keysRepository.findById(owner).orElse(Keys(owner = owner))
         keys.telegramApiKey = telegramApiKey
