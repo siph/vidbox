@@ -14,7 +14,7 @@ import java.security.Principal
 class KeysController(@Autowired private val keysService: KeysService) {
 
     @RequestMapping(value = ["/telegramApiKey"], method = [RequestMethod.PUT, RequestMethod.POST])
-    fun setTelegramApiKey(principal: Principal, @RequestParam telegramApiKey: String): ResponseEntity<Any> {
+    fun setTelegramApiKey(principal: Principal, @RequestParam(required = false) telegramApiKey: String?): ResponseEntity<Any> {
         val keys = keysService.setTelegramApiKey(owner = principal.name, telegramApiKey = telegramApiKey)
         return ResponseEntity(keys, HttpStatus.OK)
     }
