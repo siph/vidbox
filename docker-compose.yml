@@ -8,8 +8,8 @@ services:
       - /tmp:/tmp
     environment:
       # https://stackoverflow.com/questions/57213611/keycloak-and-spring-boot-web-app-in-dockerized-environment
-      # Need fully qualfied url, or edit /etc/hosts with alias.
-      # Otherwise application wont redirect properly
+      # Need fully qualified url, or edit /etc/hosts with alias.
+      # Otherwise, application won't redirect properly
       KEYCLOAK_AUTH-SERVER-URL: http://keycloak:8090/auth
       KEYCLOAK_REALM: vidbox
       KEYCLOAK_RESOURCE: vidbox
