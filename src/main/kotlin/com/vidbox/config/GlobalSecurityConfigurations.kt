@@ -43,8 +43,10 @@ class GlobalSecurityConfigurations: KeycloakWebSecurityConfigurerAdapter() {
         http!!
             .authorizeRequests()
             .antMatchers("/*")
-//            .hasAnyRole("user", "admin")
-//            .antMatchers("/vidbox/**")
+            .hasAnyRole("user", "admin")
+            .antMatchers("/swagger-ui")
+            .permitAll()
+            .antMatchers("/v2/api-docs")
             .permitAll()
             .anyRequest()
             .permitAll()
