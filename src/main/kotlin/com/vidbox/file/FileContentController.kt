@@ -2,6 +2,7 @@ package com.vidbox.file
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -15,12 +16,12 @@ class FileContentController(@Autowired private val fileService: FileService) {
 
     @RequestMapping(value = ["/upload"], method = [RequestMethod.PUT])
     fun upload(@RequestParam(name = "file", required = true) file: MultipartFile,
-               principal: Principal): ResponseEntity<Any> {
+               principal: Principal): ResponseEntity<File> {
         return ResponseEntity(fileService.uploadFile(file, principal.name), HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
-    fun getContent(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<Any> {
+    fun getContent(@PathVariable("fileId") id: Long, principal: Principal): ResponseEntity<InputStreamResource> {
         val file = fileService.getFileById(principal.name, id)
         val inputStreamResource = InputStreamResource(fileService.getContentByFile(file))
         val headers = HttpHeaders()
@@ -33,7 +34,7 @@ class FileContentController(@Autowired private val fileService: FileService) {
                  page: Int,
                  @RequestParam(value = "size", required = false, defaultValue = "20")
                  pageSize: Int,
-                 principal: Principal): ResponseEntity<Any> {
+                 principal: Principal): ResponseEntity<Page<File>> {
         return ResponseEntity(
             fileService.getFilesByOwner(principal.name, PageRequest.of(page - 1, pageSize)),
             HttpStatus.OK)
