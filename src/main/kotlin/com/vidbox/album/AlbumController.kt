@@ -1,6 +1,7 @@
 package com.vidbox.album
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,7 +24,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
                   page: Int,
                   @RequestParam(value = "size", required = false, defaultValue = "20")
                   pageSize: Int,
-                  principal: Principal): ResponseEntity<Any> {
+                  principal: Principal): ResponseEntity<Page<Album>> {
         val albums = albumService.getAlbums(principal.name, PageRequest.of(page - 1, pageSize))
         return ResponseEntity(albums, HttpStatus.OK)
     }
@@ -33,7 +34,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
                        @RequestParam(value = "fileId")
                        fileId: Long,
                        @RequestParam(value = "albumId")
-                       albumId: Long): ResponseEntity<Any> {
+                       albumId: Long): ResponseEntity<Album> {
         val album = albumService.addFileToAlbum(owner = principal.name, albumId = albumId, fileId = fileId)
         return ResponseEntity(album, HttpStatus.OK)
     }
@@ -43,7 +44,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
                        @RequestParam(value = "fileId")
                        fileId: Long,
                        @RequestParam(value = "albumId")
-                       albumId: Long): ResponseEntity<Any> {
+                       albumId: Long): ResponseEntity<Album> {
         val album = albumService.deleteFileFromAlbum(owner = principal.name, albumId = albumId, fileId = fileId)
         return ResponseEntity(album, HttpStatus.OK)
     }
@@ -51,7 +52,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
     @RequestMapping(value = ["/album"], method = [RequestMethod.GET])
     fun getAlbum(principal: Principal,
                  @RequestParam(value = "id")
-                 id: Long): ResponseEntity<Any> {
+                 id: Long): ResponseEntity<Album> {
         val album = albumService.getAlbum(owner = principal.name, albumId = id)
         return ResponseEntity(album, HttpStatus.OK)
     }
