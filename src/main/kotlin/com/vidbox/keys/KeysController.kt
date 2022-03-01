@@ -14,13 +14,13 @@ import java.security.Principal
 class KeysController(@Autowired private val keysService: KeysService) {
 
     @RequestMapping(value = ["/telegramApiKey"], method = [RequestMethod.PUT, RequestMethod.POST])
-    fun setTelegramApiKey(principal: Principal, @RequestParam(required = false) telegramApiKey: String?): ResponseEntity<Any> {
+    fun setTelegramApiKey(principal: Principal, @RequestParam(required = false) telegramApiKey: String?): ResponseEntity<Keys> {
         val keys = keysService.setTelegramApiKey(owner = principal.name, telegramApiKey = telegramApiKey)
         return ResponseEntity(keys, HttpStatus.OK)
     }
 
     @RequestMapping(value = ["/"], method = [RequestMethod.GET])
-    fun getKeys(principal: Principal): ResponseEntity<Any> {
+    fun getKeys(principal: Principal): ResponseEntity<Keys> {
         return ResponseEntity(keysService.getKeys(principal.name), HttpStatus.OK)
     }
 }
