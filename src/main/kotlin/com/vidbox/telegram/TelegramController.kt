@@ -1,6 +1,7 @@
 package com.vidbox.telegram
 
 import com.vidbox.file.FileService
+import com.vidbox.telegram.model.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,7 +18,7 @@ class TelegramController(@Autowired private val fileService: FileService,
     fun postFileToTelegram(@RequestParam fileId: Long,
                            @RequestParam(required = false, defaultValue = "") text: String,
                            @RequestParam chatId: String,
-                           principal: Principal): ResponseEntity<*> {
+                           principal: Principal): ResponseEntity<Response> {
         val file = fileService.getFileById(principal.name, fileId)
         return telegramService.postFileToTelegram(file = file, text = text, chatId = chatId)
     }
