@@ -7,6 +7,7 @@ Albums can be used to perform basic video editing such as clipping and concatena
 
 Vidbox also accepts a Telegram api-key to automatically broadcast media to a Telegram channel.
 
+Vidbox api documentation can be found at the root url.
 ## Deployment
 
 ### Docker Compose
