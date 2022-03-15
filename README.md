@@ -1,8 +1,7 @@
 # Vidbox
 
-Vidbox is a media-management application.  
+Vidbox is a media-management application that allows users to upload pictures and videos and optionally group them into albums.  
 
-Vidbox allows users to upload pictures and videos and group them into albums.   
 Albums can be used to perform basic video editing such as clipping and concatenating.
 
 Vidbox also accepts a Telegram api-key to automatically broadcast media to a Telegram channel.
