@@ -2,12 +2,19 @@
 
 Vidbox is a media-management application that allows users to upload pictures and videos and optionally group them into albums.  
 
-Albums can be used to perform basic video editing such as clipping and concatenating.
+## Media
+Vidbox allows uploading and storing of both image and video files. These files can be stored individually, or grouped into albums.  
 
-Vidbox also accepts a Telegram api-key to automatically broadcast media to a Telegram channel.
+## Albums
+Media files can be grouped into albums, which can be used to perform basic video editing tasks such as clipping and concatenating.
 
-Vidbox api documentation can be found at the root url.
-## Deployment
+## Broadcasting
+When supplied with a Telegram api-key, Vidbox can be used to automatically broadcast individual files to a Telegram channel.
+
+## Documentation
+Vidbox api documentation can be found at the root url of the deployed project.
+
+# Deployment
 
 ### Docker Compose
 ```bash
