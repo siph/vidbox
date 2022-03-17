@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 
 @RestController
+@RequestMapping(value = ["/telegram"])
 class TelegramController(@Autowired private val fileService: FileService,
                          @Autowired private val telegramService: TelegramService,
                          @Autowired private val albumService: AlbumService) {
 
-    @RequestMapping(value = ["/telegram"], method = [RequestMethod.POST])
+    @RequestMapping(value = ["/file"], method = [RequestMethod.POST])
     fun postFileToTelegram(@RequestParam fileId: Long,
                            @RequestParam(required = false, defaultValue = "") text: String,
                            @RequestParam chatId: String,
@@ -25,7 +26,7 @@ class TelegramController(@Autowired private val fileService: FileService,
         return telegramService.postFileToTelegram(file = file, text = text, chatId = chatId)
     }
 
-    @RequestMapping(value = [""], method = [RequestMethod.POST])
+    @RequestMapping(value = ["/album"], method = [RequestMethod.POST])
     fun postAlbumToTelegram(@RequestParam albumId: Long,
                             @RequestParam(required = false, defaultValue = "") text: String,
                             @RequestParam chatId: String,
