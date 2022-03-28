@@ -22,19 +22,14 @@
         <apache.commons.io.version>2.11.0</apache.commons.io.version>
         <apache.commons.fileupload.version>1.4</apache.commons.fileupload.version>
         <log4j2.version>2.15.0</log4j2.version>
-        <springfox.version>3.0.0</springfox.version>
+        <springdoc.version>1.6.4</springdoc.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
