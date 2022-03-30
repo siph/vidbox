@@ -49,12 +49,12 @@ class FileContentController(@Autowired private val fileService: FileService) {
             )]
         )
     )
-    @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/file"], method = [RequestMethod.GET])
     fun getContent(@Parameter(description = "Id for requested file")
-                   @PathVariable("fileId")
-                   id: Long,
+                   @RequestParam(value = "fileId")
+                   fileId: Long,
                    principal: Principal): ResponseEntity<InputStreamResource> {
-        val file = fileService.getFileById(principal.name, id)
+        val file = fileService.getFileById(principal.name, fileId)
         val inputStreamResource = InputStreamResource(fileService.getContentByFile(file))
         val headers = HttpHeaders()
         headers.set("Content-Type", file.mimeType)
@@ -92,11 +92,11 @@ class FileContentController(@Autowired private val fileService: FileService) {
             content = [Content(mediaType = "application/json")]
         )
     )
-    @RequestMapping(value = ["/files/{fileId}"], method = [RequestMethod.DELETE])
+    @RequestMapping(value = ["/files"], method = [RequestMethod.DELETE])
     fun deleteFile(@Parameter(description = "Id for requested file")
-                   @PathVariable("fileId") id: Long,
+                   @RequestParam(value = "fileId") fileId: Long,
                    principal: Principal): ResponseEntity<Any> {
-        fileService.deleteFileById(principal.name, id)
+        fileService.deleteFileById(principal.name, fileId)
         return ResponseEntity(HttpStatus.OK)
     }
 }
