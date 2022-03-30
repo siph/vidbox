@@ -14,6 +14,7 @@ import java.security.Principal
 @RestController
 class FileContentController(@Autowired private val fileService: FileService) {
 
+    // TODO: restrict file types
     @RequestMapping(value = ["/upload"], method = [RequestMethod.PUT])
     fun upload(@RequestParam(name = "file", required = true) file: MultipartFile,
                principal: Principal): ResponseEntity<File> {
