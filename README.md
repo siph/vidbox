@@ -12,7 +12,7 @@ Media files can be grouped into albums, which can be used to perform basic video
 When supplied with a Telegram api-key, Vidbox can be used to automatically broadcast individual files to a Telegram channel.
 
 ## Documentation
-Vidbox api documentation can be found at the root url of the deployed project.
+Vidbox api documentation can be found at path: /swagger-ui/index.html of the deployed project.
 
 # Deployment
 

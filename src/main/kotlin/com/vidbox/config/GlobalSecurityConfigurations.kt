@@ -44,7 +44,7 @@ class GlobalSecurityConfigurations: KeycloakWebSecurityConfigurerAdapter() {
             .authorizeRequests()
             .antMatchers("/*")
             .hasAnyRole("user", "admin")
-            .antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resource/**")
+            .antMatchers("/swagger-ui/*", "/swagger-ui.html")
             .permitAll()
             .anyRequest()
             .permitAll()
