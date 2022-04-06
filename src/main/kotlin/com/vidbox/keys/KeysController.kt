@@ -30,7 +30,7 @@ class KeysController(@Autowired private val keysService: KeysService) {
             )]
         )
     )
-    @RequestMapping(value = ["/telegramApiKey"], method = [RequestMethod.PUT, RequestMethod.POST])
+    @RequestMapping(value = ["/telegramApiKey"], method = [RequestMethod.PUT])
     fun setTelegramApiKey(principal: Principal,
                           @Parameter(description = "Telegram api-key")
                           @RequestParam(required = false)
