@@ -64,7 +64,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
                 schema = Schema(implementation = Album::class))]
         )
     )
-    @RequestMapping(value = ["/album/add"], method = [RequestMethod.POST, RequestMethod.PUT])
+    @RequestMapping(value = ["/album/add"], method = [RequestMethod.PUT])
     fun addFileToAlbum(principal: Principal,
                        @Parameter(description = "Id for requested file")
                        @RequestParam(value = "fileId")
@@ -85,7 +85,7 @@ class AlbumController(@Autowired private val albumService: AlbumService) {
                 schema = Schema(implementation = Album::class))]
         )
     )
-    @RequestMapping(value = ["/album/remove"], method = [RequestMethod.POST, RequestMethod.DELETE])
+    @RequestMapping(value = ["/album/remove"], method = [RequestMethod.DELETE])
     fun deleteFileFromAlbum(principal: Principal,
                             @Parameter(description = "Id for requested file")
                             @RequestParam(value = "fileId")
