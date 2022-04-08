@@ -1,6 +1,12 @@
 # Vidbox
 
-Vidbox is a media-management application that allows users to upload pictures and videos and optionally group them into albums.  
+Vidbox is a media-management application that allows users to upload pictures and videos and optionally group them into albums. Albums and files can be posted to a users Telegram channel.
+
+Vidbox is an http-api demo project utilizing some of the following technologies:   
+- Spring Boot (https://spring.io/projects/spring-boot)
+- Keycloak (https://www.keycloak.org/)
+- Docker & Docker Compose (https://www.docker.com/)
+- Kotlin (https://kotlinlang.org/)
 
 ## Media
 Vidbox allows uploading and storing of both image and video files. These files can be stored individually, or grouped into albums.  
